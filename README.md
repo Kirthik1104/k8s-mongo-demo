@@ -33,3 +33,10 @@ This repository contains Kubernetes manifests for deploying MongoDB and Mongo-Ex
 
 - The secret values are base64 encoded.
 - For production, change the credentials and consider using a more secure approach.
+
+
+# MongoDB & Mongo-Express on Kubernetes
+
+![MongoDB Kubernetes Architecture](Screenshot%202025-08-09%20at%208.21.14%E2%80%AFPM.png)
+
+This repository contains Kubernetes manifests for deploying MongoDB and Mongo-Express using Secrets and ConfigMaps for secure configuration.
