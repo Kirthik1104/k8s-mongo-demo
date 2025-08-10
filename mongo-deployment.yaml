@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  labels:
+    app: mongodb # not related to anything
+
+#spec is the specification of the deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb  #this and line and line 19 are used to create a label selector
+
+#template is the template for the pod
+  template:
+    metadata:
+      labels:
+        app: mongodb #the labels are used to identify the pod which is selected by the selector in line 13
+    spec:
+      containers:
+        - name: mongodb # not related to anything
+          image: mongo
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef: # is a Kubernetes feature that tells Kubernetes to look for a Secret resource.
+                  name: mongodb-secret  # name of the secret from the secret.yaml file
+                  key: mongo-root-username 
+
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef: #`secretKeyRef` is a Kubernetes feature that tells Kubernetes to look for a Secret resource.
+                  name: mongodb-secret
+                  key: mongo-root-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:  # this is used to select the pod or connect to the pod above
+    app: mongodb 
+  ports:
+    - protocol: TCP
+      port: 27017 # this is the port that the service is listening on, we expose this port to the cluster
+      targetPort: 27017 # this is the port that the pod is listening on
